@@ -1,4 +1,4 @@
-#Project DIVA
+Project DIVA
 
 Description coming soon.
 
