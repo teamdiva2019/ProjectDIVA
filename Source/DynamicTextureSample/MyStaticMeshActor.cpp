@@ -1,4 +1,4 @@
-/*// Fill out your copyright notice in the Description page of Project Settings.
+/*z// Fill out your copyright notice in the Description page of Project Settings.
 
 // This class has been modified from the example by unreal engine forum user JR4815 in his response to the following thread:
 // https://forums.unrealengine.com/showthread.php?84856-Drawing-on-textures-in-real-time
