@@ -3,6 +3,7 @@
 // This class has been modified from the example by unreal engine forum user JR4815 in his response to the following thread:
 // https://forums.unrealengine.com/showthread.php?84856-Drawing-on-textures-in-real-time
 
+#include <Python.h>
 #include "DynamicTextureSample.h"
 #include "MyStaticMeshActor.h"
 #include <stdlib.h>
@@ -10,7 +11,6 @@
 #include <math.h>
 #include <iostream>
 #include <string>
-#include <Python.h>
 #include <string>
 #include <sstream>
 #include <fstream>
@@ -25,7 +25,7 @@
 #define ALPHA_CHECK 200
 
 // This is the name of the data file we will read. 
-#define PROG_NAME "C:/Users/Erin/Documents/Unreal Projects/DynamicTextureSample-brokenbuild/ReadGeneralNC.py"
+#define PROG_NAME "C:/Users/Erin/Documents/Unreal Projects/DynamicTextureSample/ReadGeneralNC.py"
 // There are 3 dimensions (lat, lon, time) and we will update the texture every .1 seconds
 #define DIMS 3
 #define UPDATEINTERVAL 0.05
@@ -34,12 +34,13 @@
 float *temp_in;
 int currz = 0;
 // Temporary max and min values
-float max = 108370.0f, min = 93320.0f;
+float min = 220.0f, max = 310.0f;
 size_t lat, lon, time_len;
+int currvar = 0;
 
 std::vector<std::string> var_names;
 std::vector<std::vector<std::string>> dim_values;
-std::vector<std::vector<float>> var_values;
+std::vector<std::vector<std::vector<uint8>>> var_values;
 std::vector<std::string> shortnames;
 
 int getIndex(int x, int y, int z) {
@@ -108,35 +109,54 @@ AMyStaticMeshActor::AMyStaticMeshActor(const class FObjectInitializer& PCIP)
 	/*// Run the python scrtipt on the given .nc file
 	std::string stdOutErr =
 	"import sys\n\
-	class CatchOutErr:\n\
+class CatchOutErr:\n\
 	def __init__(self):\n\
-	self.value = ''\n\
-	def write(self, txt):\n\
-	self.value += txt\n\
-	catchOutErr = CatchOutErr()\n\
-	sys.stdout = catchOutErr\n\
-	sys.stderr = catchOutErr\n\
+		self.value = ''\n\
+		def write(self, txt):\n\
+			self.value += txt\n\
+catchOutErr = CatchOutErr()\n\
+sys.stdout = catchOutErr\n\
+sys.stderr = catchOutErr\n\
 	"; //this is python code to redirect stdouts/stderr*/
 
-	UE_LOG(LogActor, Log, TEXT("Runing python script"));
-	char * file = "file_path = 'C:\\Users\\Erin\\Documents\\Unreal Projects\\DynamicTextureSample-brokenbuild\\mslp.2002.nc'\n";
+	UE_LOG(LogActor, Log, TEXT("Running python script"));
+	char * file = "file_path = 'C:/Users/Erin/Documents/Unreal Projects/DynamicTextureSample/mslp.2002.nc'\n";
 	Py_Initialize();
 	PyObject *pModule = PyImport_AddModule("__main__"); //create main module
-														//PyRun_SimpleString(stdOutErr.c_str()); //invoke code to redirect
-	PyRun_SimpleString(file);
-	PyObject* PyFileObject = PyFile_FromString(PROG_NAME, "r");
-	int python_result = PyRun_SimpleFileEx(PyFile_AsFile(PyFileObject), PROG_NAME, 0);
+	//int res = PyRun_SimpleString(stdOutErr.c_str()); //invoke code to redirect
+	//UE_LOG(LogActor, Error, TEXT("Ran errcheck: result = %d"), res);
+
+	std::string line;
+	FILE * python_prog = fopen(PROG_NAME, "r");
+	std::string tmp;
+	int result;
+	int line_number = 0;
+	result = PyRun_SimpleString(file);
+	UE_LOG(LogActor, Error, TEXT("Ran file: result = %d"), result);
+	result = PyRun_AnyFile(python_prog, PROG_NAME);
+	UE_LOG(LogActor, Error, TEXT("Ran prog: result = %d"), result);
+
+	/*const char * cstr;
+	std::ifstream prog;
+	prog.open(PROG_NAME);
+	while (getline(prog, line)) {
+		cstr = line.c_str();
+		result = PyRun_SimpleString(cstr);
+		FString Fs(cstr);
+		UE_LOG(LogActor, Error, TEXT("%s - %d"), *Fs, result);
+	}*/
+
+
 	//PyObject *catcher = PyObject_GetAttrString(pModule,"catchOutErr"); //get our catchOutErr created above
 	//PyErr_Print(); //make python print any errors
 	//PyObject *output = PyObject_GetAttrString(catcher,"value"); //get the stdout and stderr from our catchOutErr object
-	//char * str = PyString_AsString(output);
+	//char * str = PyBytes_AsString(output);
 	//FString Fs(str);
-	//UE_LOG(LogActor, Error, TEXT("result = %s"), *Fs);
-	UE_LOG(LogActor, Log, TEXT("Script exited: %d"), python_result);
+	//UE_LOG(LogActor, Error, TEXT("error = %s"), *Fs);
+	UE_LOG(LogActor, Log, TEXT("Script exited"));
 	UE_LOG(LogActor, Log, TEXT("Finalized; reading metadata"));
 
 	std::ifstream metadata;
-	std::string line;
 	metadata.open("./data/metadata.txt");
 	var_values.clear();
 	var_names.clear();
@@ -231,15 +251,22 @@ void AMyStaticMeshActor::BeginPlay()
 	// Read in the data for each variable
 	for (int i = 0; i < var_names.size(); i++) {
 		std::ifstream vardata;
-		std::string curr_filename = std::string("./data/data_") + shortnames.at(i) + std::string(".bin");
+		std::string curr_filename = std::string("./data/colors_") + shortnames.at(i) + std::string(".bin");
 		vardata.open(curr_filename.c_str(), std::ios::in | std::ios::binary);
-		std::vector<float> temp;
+		std::vector<uint8> temp1;
+		std::vector<std::vector<uint8>> temp2;
 		while (vardata) {
-			float curr;
-			vardata.read(reinterpret_cast<char*>(&curr), sizeof(float));
-			temp.push_back(curr);
+			uint8 curr;
+			for (int j = 0; j < 3; j++) {
+				vardata.read(reinterpret_cast<char*>(&curr), sizeof(uint8));
+				//UE_LOG(LogActor, Error, TEXT("%d"), curr);
+				temp1.push_back(curr);
+			}
+			temp2.push_back(temp1);
+			temp1.clear();
 		}
-		var_values.push_back(temp);
+		var_values.push_back(temp2);
+		temp2.clear();
 	}
 	UE_LOG(LogActor, Error, TEXT("Done"));
 
@@ -308,7 +335,10 @@ void AMyStaticMeshActor::Tick(float DeltaTime)
 		for (y = 0; y < lat; y++) {
 			for (x = 0; x < lon; x++) {
 				int indx = getIndex(x, lat - y, 0) * 4;
-				float curr = var_values.at(0).at(getIndex(x, y, currz));
+				mDynamicColors[indx + RED] = var_values.at(currvar).at(getIndex(x, y, currz)).at(0);
+				mDynamicColors[indx + GREEN] = var_values.at(currvar).at(getIndex(x, y, currz)).at(1);
+				mDynamicColors[indx + BLUE] = var_values.at(currvar).at(getIndex(x, y, currz)).at(2);
+				/*float curr = var_values.at(0).at(getIndex(x, y, currz));
 				curr = (curr < 0) ? curr * -1 : curr;
 				// Color scaling algo from:
 				//http://stackoverflow.com/questions/2374959/algorithm-to-convert-any-positive-integer-to-an-rgb-value by Martin Beckett
@@ -343,7 +373,7 @@ void AMyStaticMeshActor::Tick(float DeltaTime)
 					mDynamicColors[indx + RED] = 0;
 					mDynamicColors[indx + GREEN] = 0;
 					mDynamicColors[indx + BLUE] = 255;
-				}
+				}*/
 			}
 		}
 
