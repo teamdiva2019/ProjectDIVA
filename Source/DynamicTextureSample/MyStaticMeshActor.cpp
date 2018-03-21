@@ -188,7 +188,7 @@ AMyStaticMeshActor::AMyStaticMeshActor(const class FObjectInitializer& PCIP)
 
 void AMyStaticMeshActor::BeginPlay()
 {
-
+	anim_play = true;
 	UE_LOG(LogActor, Error, TEXT("Reading binary data"));
 	// Read in the data for each variable
 	for (int i = 0; i < var_names.size(); i++) {
@@ -267,7 +267,7 @@ void AMyStaticMeshActor::Tick(float DeltaTime)
 	float t = GetWorld()->GetTimeSeconds();
 
 	// Only update the texture every update interval
-	if (t - lastTick > UPDATEINTERVAL)
+	if (t - lastTick > UPDATEINTERVAL && anim_play)
 	{
 		lastTick = t;
 

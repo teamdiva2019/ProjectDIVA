@@ -31,3 +31,11 @@ Settings in Visual Studio:
 * Mode: Development Editor
 * Make sure our project is set as a start up project (right click -> set startup project)
 * Build order: UE4 then our project, our project depends on UE4
+
+# COMMON ERRORS
+
+## Can't include precompiled file Python.h
+* Delete the line `#include <Python.h>`
+* Rebuild and let it break
+* Put the line back
+* Build again, et voila

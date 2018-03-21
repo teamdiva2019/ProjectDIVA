@@ -3,19 +3,18 @@
 #pragma once
 
 #include "Engine/StaticMeshActor.h"
-
-#include "MyStaticMeshActor.generated.h"
+#include "MyStaticMeshActor2.generated.h"
 
 /**
- * 
- */
+*
+*/
 UCLASS()
-class DYNAMICTEXTURESAMPLE_API AMyStaticMeshActor : public AStaticMeshActor
+class DYNAMICTEXTURESAMPLE_API AMyStaticMeshActor2 : public AStaticMeshActor
 {
 	GENERATED_BODY()
 
-	AMyStaticMeshActor(const class FObjectInitializer& PCIP);
-	
+		AMyStaticMeshActor2(const class FObjectInitializer& PCIP);
+
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	virtual void PostInitializeComponents() override;
@@ -30,16 +29,11 @@ class DYNAMICTEXTURESAMPLE_API AMyStaticMeshActor : public AStaticMeshActor
 	FUpdateTextureRegion2D* mUpdateTextureRegion;
 
 	uint8* mDynamicColors;
-	
+
 	uint32 mDataSize;
 	uint32 mDataSqrtSize;
 	uint32 mArraySize;
 	uint32 mArrayRowSize;
-	
-	float lastTick;
 
-	//Control whether animation should happen
-	public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool anim_play;
+	float lastTick;
 };
