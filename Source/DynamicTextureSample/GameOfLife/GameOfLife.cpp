@@ -19,7 +19,7 @@ toggle(true)
 
 			char chara[] = { shape->figure[i][j], 0 };
 
-			OutputDebugStringW(ANSI_TO_TCHAR(chara));
+			//OutputDebugStringW(ANSI_TO_TCHAR(chara));
 		}
 	}
 

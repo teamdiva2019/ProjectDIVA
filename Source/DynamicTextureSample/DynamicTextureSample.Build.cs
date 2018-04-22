@@ -5,10 +5,10 @@ using System.IO;
 
 public class DynamicTextureSample : ModuleRules
 {
-    public DynamicTextureSample(TargetInfo Target)
+    public DynamicTextureSample(ReadOnlyTargetRules Target) : base(Target)
     {
         PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "RHI", "RenderCore" });
-        PrivateDependencyModuleNames.AddRange(new string[] { });
+        PrivateDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "RHI", "RenderCore" });
 
         // Path to main folder, and thirdparty folder
         // https://wiki.unrealengine.com/Linking_Static_Libraries_Using_The_Build_System
@@ -66,7 +66,7 @@ public class DynamicTextureSample : ModuleRules
     // Copy our dynamic libraries (DLL) files
     // These are needed a runtime, and should be in the binary folder
     // https://answers.unrealengine.com/questions/402515/how-to-modify-build-file-to-copy-dlls-to-binaries.html
-    private void CopyToBinaries(TargetInfo Target, string projectPath, string dllPath)
+    private void CopyToBinaries(ReadOnlyTargetRules Target, string projectPath, string dllPath)
     {
 
         // Calculate the location to copy

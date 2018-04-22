@@ -5,21 +5,22 @@ using System.Collections.Generic;
 
 public class DynamicTextureSampleTarget : TargetRules
 {
-	public DynamicTextureSampleTarget(TargetInfo Target)
-	{
-		Type = TargetType.Game;
-	}
+	public DynamicTextureSampleTarget(TargetInfo Target) : base(Target)
+    {
+        this.Type = TargetType.Game;
+
+        this.ExtraModuleNames.AddRange(
+            new string[] {
+                "DynamicTextureSample"
+            });
+
+        this.bEnforceIWYU = true;
+        this.bCompileLeanAndMeanUE = true;
+        this.bForceEnableRTTI = true;
+        this.bForceEnableExceptions = true;
+    }
 
 	//
 	// TargetRules interface.
 	//
-
-	public override void SetupBinaries(
-		TargetInfo Target,
-		ref List<UEBuildBinaryConfiguration> OutBuildBinaryConfigurations,
-		ref List<string> OutExtraModuleNames
-		)
-	{
-		OutExtraModuleNames.AddRange( new string[] { "DynamicTextureSample" } );
-	}
 }
