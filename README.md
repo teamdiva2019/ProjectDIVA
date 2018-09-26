@@ -7,14 +7,14 @@ commenting/uncommenting the block of code in Source/DynamicTextureSample/MyStati
 
 # SET UP INSTRUCTIONS
 
-System Requirements:
+## System Requirements:
 1) Microsoft Visual Studio (2015 or 2017) with all C++ libraries
 2) Git
 3) Unreal v4.19
 4) Python 3.6.4 64-bit
 5) Windows SDK v8.1 (https://developer.microsoft.com/en-us/windows/downloads/sdk-archive)
 
-Steps:
+## Steps:
 1) Clone Repository
 2) Download latest netcdf4 library for c here: https://drive.google.com/drive/folders/1CQn-5Ej8iMF-Iit61bFJ_QtGMvo2s-2W
 3) Copy entire folder into Thirdparty/netCDF
@@ -31,8 +31,7 @@ Steps:
 9) Start Debugger
 10) Unreal Engine will start automatically
 
-
-Settings in Visual Studio:
+## Settings in Visual Studio:
 * VC++ Include and library directories contain /include and /libs for Python3.6
 * Mode: Development Editor
 * Make sure our project is set as a start up project (right click -> set startup project)
