@@ -328,6 +328,7 @@ DerivedDataCache
 Intermediate
 Saved
 Thirdparty
+RawData
 *.VC.db
 *.opensdf
 *.opendb
