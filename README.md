@@ -8,20 +8,26 @@ commenting/uncommenting the block of code in Source/DynamicTextureSample/MyStati
 # SET UP INSTRUCTIONS
 
 System Requirements:
-1) Microsoft Visual Studio 2015 installed with all C++ libraries
-2) Set Up git
-3) Unreal v4.14 installed
-4) Python 3.6.4 64-bit installed
+1) Microsoft Visual Studio (2015 or 2017) with all C++ libraries
+2) Git
+3) Unreal v4.19
+4) Python 3.6.4 64-bit
+5) Windows SDK v8.1 (https://developer.microsoft.com/en-us/windows/downloads/sdk-archive)
 
 Steps:
 1) Clone Repository
-2) Download latest netcdf4 library for c here: https://www.unidata.ucar.edu/software/netcdf/docs/winbin.html (without DAP)
+2) Download latest netcdf4 library for c here: https://drive.google.com/drive/folders/1CQn-5Ej8iMF-Iit61bFJ_QtGMvo2s-2W
 3) Copy entire folder into Thirdparty/netCDF
-4) Download mslp.2002.nc https://drive.google.com/drive/folders/0B_Folj4rOnAVYmt5OTNoX1FSMjA
-5) Move mslp.2002.nc to project root directory
-6) Right-click Unreal Engine Project (DynamicTextureSample.uproject) --> Generate Visual Studio project files
-7) Open Microsoft Visual Studio Solution (DynamicTextureSample.sln)
-8) Change FILE_NAME to appropriate file path in MyStaticMeshActor.cpp
+4) Download mslp.2002.nc (https://drive.google.com/open?id=1RqXCXicaGLiIxn3OmC15g8GA5G51wTa0) and move mslp.2002.nc to project root directory
+5) Download and extract chesapeake and florida raw data (https://drive.google.com/drive/folders/1RXNpJHktfyJaZ5AatHntpm2fX_enN-jS)
+6) Right-click Unreal Engine Project (DynamicTextureSample.uproject) --> Generate Visual Studio project files. If option is not showing up:
+   - Navigate to C:\Program Files (x86)\Epic Games\Launcher\Engine\Binaries\Win64, copy the UnrealVersionSelector.exe file
+   - Navigate to C:\Program Files\Epic Games\UE_4.19\Engine\Binaries\Win64, paste UnrealVersionSelector.exe
+   - Double click on UnrealVersionSelector.exe, select Yes to register directory as Unreal Engine installation
+7) Open DynamicTextureSample.sln with Visual Studio
+8) Update paths
+   - MyStaticMeshActor.cpp PROG_NAME and FILE_NAME
+   - MyStaticMeshActor2.cpp FILE_NAME and FIRST_FILE_NAME
 9) Start Debugger
 10) Unreal Engine will start automatically
 
