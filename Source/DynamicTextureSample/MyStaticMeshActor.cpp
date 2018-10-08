@@ -209,6 +209,7 @@ void AMyStaticMeshActor::BeginPlay()
 		}
 		var_values.push_back(temp2);
 		temp2.clear();
+		vardata.close();
 	}
 	UE_LOG(LogActor, Error, TEXT("Done"));
 
